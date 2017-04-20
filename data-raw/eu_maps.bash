@@ -12,7 +12,7 @@ mapshaper -i NUTS_2013_01M_SH/data/NUTS_RG_01M_2013.shp \
  -clip bbox=2500000,1400000,7350000,5750000 \
  -simplify 10% \
  -split STAT_LEVL_ \
- -o ../data/nuts.shp
+ -o ../data/europe_nuts.shp
 
 
 mapshaper -i CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp \
@@ -20,22 +20,33 @@ mapshaper -i CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp \
  -proj "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs" densify \
  -clip bbox=2500000,1400000,7350000,5750000 \
  -simplify 10% \
- -o ../data/country.shp
+ -o ../data/europe_background.shp
 
 cd ../data
 # nuts levels are numbered incorrectly so fix that!
-rename s/nuts1/nuts0/ nuts1.*
-rename s/nuts2/nuts1/ nuts2.*
-rename s/nuts3/nuts2/ nuts3.*
-rename s/nuts4/nuts3/ nuts4.*
+rename s/nuts1/nuts0/ europe_nuts1.*
+rename s/nuts2/nuts1/ europe_nuts2.*
+rename s/nuts3/nuts2/ europe_nuts3.*
+rename s/nuts4/nuts3/ europe_nuts4.*
 cd ../data-raw
+
+for proj in "wintri" "eck4" "kav7" "wgs84" "robinson"
+do
+  mapshaper -i CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp \
+   -proj $proj densify \
+   -simplify 3% \
+   -o ../data/world_${proj}.json
+done
+
+mapshaper -i ../data/*.json -o ../data format=shapefile
+
 
 # save the projections
 r ../R/set_projection.R
 
-mapshaper -i ../data/nuts?.shp ../data/country.shp -o ../data format=geojson
+mapshaper -i ../data/europe_nuts?.shp ../data/europe_background.shp -o ../data format=geojson
 
-#mapshaper-gui ../data/nuts?.shp
+#mapshaper-gui ../data/europe_nuts?.shp
 
-rm -r NUTS_2013_01M_SH \
-      CNTR_2014_03M_SH
+# rm -r NUTS_2013_01M_SH \
+#       CNTR_2014_03M_SH
