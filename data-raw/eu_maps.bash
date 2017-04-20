@@ -33,6 +33,7 @@ cd ../data-raw
 for proj in "wintri" "eck4" "kav7" "wgs84" "robinson"
 do
   mapshaper -i CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp \
+   -filter 'CNTR_ID != "AQ"' \
    -proj $proj densify \
    -simplify 3% \
    -o ../data/world_${proj}.json
