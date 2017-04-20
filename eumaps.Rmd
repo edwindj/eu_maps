@@ -2,11 +2,12 @@
 title: "EU kaarten t.b.v. CBS"
 author: "Edwin de Jonge, Chantal Melser, Martijn Tennekes"
 output:
+  cbsmarkdown::cbs_word_document: default
+  cbsmarkdown::cbs_html_document: default
   html_notebook: default
-  html_document: default
 ---
 
-```{r}
+```{r, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE)
 library(tmap)
 library(tmaptools)
@@ -59,18 +60,91 @@ We hebben hiervoor de `mapshaper`-tool van http://mapshaper.org gebruikt, waarbi
 
 ### NUTS
 
-De projectie en 
+De projectie en bounding box voor de kaarten hebben de volgende effecten:
 
 ```{r}
-nuts_old <- read_shape("")
+nuts_old <- read_shape("data-raw/NUTS_2013_01M_SH/data/NUTS_RG_01M_2013.shp")
+nuts0 <- read_shape("data/nuts0.shp")
+nuts1 <- read_shape("data/nuts1.shp")
+nuts2 <- read_shape("data/nuts2.shp")
+nuts3 <- read_shape("data/nuts3.shp")
 ```
 
+```{r, fig.cap="zonder projectie en boundingbox"}
+tm_shape(nuts_old) + tm_polygons(border.col="white", col="#00a1cd", lwd=0.5)
+```
+
+```{r, , fig.cap="Lambert Equal Area projectie + bbox"}
+tm_shape(nuts2) + tm_polygons(border.col="white", lwd=0.5, col="#00a1cd")
+```
 
 ### Countries
 
 Omdat countries alle landen van de wereld bevat is de projectie van de countries-kaart iets ingewikkelder: de Lambert Equal Area werkt niet met latlong coordinaten met 180 graden. Dus verklein eerst die kaart in de oorspronkelijke coordinaten, projecteer dan naar Lambert Equal Area en gebruik daarna dezelfde bounding box.
 
 
+## All together now:
+
+```{r}
+country <- read_shape("data/country.shp")
+tm_shape(country) +
+  tm_polygons(border.col="white", col="gray90") +
+  tm_shape(nuts2) + 
+  tm_polygons(border.col="white", lwd=0.5, col="#00a1cd")
+```
+
+Moet de achtergrond lijnen gebruiken voor de grenzen?
+
+```{r}
+country <- read_shape("data/country.shp")
+tm_shape(country) +
+  tm_fill(col="gray90") +
+  tm_shape(nuts2) + 
+  tm_polygons(border.col="white", lwd=0.5, col="#00a1cd")
+
+```
+
+## NUTS
+
+### NUTS0
+
+```{r, fig.cap="NUTS0"}
+country <- read_shape("data/country.shp")
+tm_shape(country) +
+  tm_fill(col="gray90") +
+  tm_shape(nuts0) + 
+  tm_polygons(border.col="white", lwd=0.5, col="#00a1cd")
+```
+
+### NUTS1
+
+```{r, fig.cap="NUTS1"}
+country <- read_shape("data/country.shp")
+tm_shape(country) +
+  tm_fill(col="gray90") +
+  tm_shape(nuts1) + 
+  tm_polygons(border.col="white", lwd=0.5, col="#00a1cd")
+```
+
+### NUTS2
+
+```{r, fig.cap="NUTS2"}
+country <- read_shape("data/country.shp")
+tm_shape(country) +
+  tm_fill(col="gray90") +
+  tm_shape(nuts2) + 
+  tm_polygons(border.col="white", lwd=0.5, col="#00a1cd")
+```
+
+### NUTS3
+
+```{r, fig.cap="NUTS3"}
+country <- read_shape("data/country.shp")
+tm_shape(country) +
+  tm_fill(col="gray90") +
+  tm_shape(nuts3) + 
+  tm_polygons(border.col="white", lwd=0.5, col="#00a1cd", border.alpha=0.5)
+```
 
 ## Open vragen:
 
@@ -78,3 +152,7 @@ Omdat countries alle landen van de wereld bevat is de projectie van de countries
 Nederland niet heel nauwkeurig is: het IJsselmeer is weggepoetst. NB: Dit is geen effect van het simplificeren. Dit is niet erg, maar zal ongetwijfeld mensen opvallen. Wellicht is er alternatief kaartmateriaal dat NL nauwkeuriger beschrijft, maar dan moeten ook de NUTS kaarten hiervoor beschikbaar zijn. (en dat is zeer de vraag.)
 
 - Malta: malta is een van de Europese landen, maar nauwelijks zichtbaar. Een mogelijke oplossing is om Malta te vergroten zodat het beter zichtbaar is. Voor cartografische toepassingen is een te overwegen optie.
+
+- Welke identifiers moeten opgenomen worden in de NUTS lagen?
+
+
