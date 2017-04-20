@@ -2,10 +2,6 @@ library(tmap)
 library(tmaptools)
 
 data("Europe")
-
-sp::bbox(Europe)
-Europe
-
 proj <- get_projection(Europe)
 
 country <- tmaptools::read_shape("data-raw/country.shp", current.projection = proj)
