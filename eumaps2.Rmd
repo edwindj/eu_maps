@@ -1,0 +1,66 @@
+---
+title: "Wereld-kaarten t.b.v. CBS"
+author: "Edwin de Jonge, Chantal Melser, Martijn Tennekes"
+output:
+  pdf_document: default
+  cbsmarkdown::cbs_word_document: default
+  html_notebook: default
+  cbsmarkdown::cbs_html_document: default
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE)
+library(tmap)
+library(tmaptools)
+library(sf)
+europe <- st_read("data/europe_background.geojson")
+countries <- st_read("data/europe_nuts0.geojson")
+```
+# Inleiding
+
+```{r}
+tm_shape(europe) + 
+  tm_fill(col="gray95") + 
+tm_shape(countries) +
+  tm_polygons(border.col="white", lwd=0.5, col="#00a1cd")
+```
+
+
+# Vergroten van Malta
+
+```{r}
+library(sf)
+nuts0 <- st_read("data/europe_nuts0.geojson")
+
+scale_region <- function(sf, s=rep(1, nrow(sf))){
+  center <- st_centroid(sf)
+  geom <- sf$geometry - center$geometry
+  for (r in seq_len(nrow(sf))){
+    geom[r] <- geom[r] * s[r]
+  }
+  sf$geometry <- geom + center$geometry
+  sf
+}
+
+for(sc in c(1, 4, 6,8, 10)){
+  s <- ifelse(nuts0$NUTS_ID == "MT", sqrt(sc), 1)
+  m <- 
+    nuts0 %>% 
+    scale_region(s) %>% 
+    tm_shape() + tm_fill(col="#00a1cd") + tm_borders(col="white", alpha=0.5) + tm_layout(paste0("Oppervlakte Malta x ", sc)) 
+  print(m)
+}
+
+```
+
+
+
+# Divergerende kleurschaal
+
+Conflicteert dit met landen buiten de populatie? (5% grijs)
+
+
+# Wereldkaart: landen zonder data vs landen buiten de populatie
+
+```{r}
+```
