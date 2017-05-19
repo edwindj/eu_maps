@@ -1,8 +1,11 @@
-# curl -O http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/NUTS_2013_01M_SH.zip
-# curl -O http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/CNTR_2014_03M_SH.zip
 
-unzip -o NUTS_2013_01M_SH.zip
-unzip -o CNTR_2014_03M_SH.zip
+[ ! -e NUTS_2013_01M_SH.zip ] &&
+  curl -O http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/NUTS_2013_01M_SH.zip &&
+  unzip -o NUTS_2013_01M_SH.zip
+  
+[ ! -e CNTR_2014_03M_SH.zip ] &&
+  curl -O http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/CNTR_2014_03M_SH.zip &&
+  unzip -o CNTR_2014_03M_SH.zip
 
 rm -r ../data
 mkdir ../data
@@ -31,16 +34,7 @@ rename s/nuts3/nuts2/ europe_nuts3.*
 rename s/nuts4/nuts3/ europe_nuts4.*
 cd ../data-raw
 
-for proj in "wintri" "eck4" "kav7" "wgs84" "robinson"
-do
-  mapshaper -i CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp \
-   -filter 'CNTR_ID != "AQ"' \
-   -proj $proj densify \
-   -simplify 3% \
-   -o ../data/world_${proj}.json
-done
-
-mapshaper -i ../data/*.json -o ../data format=shapefile
+#mapshaper -i ../data/*.json -o ../data format=shapefile
 
 
 # save the projections
