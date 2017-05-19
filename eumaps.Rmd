@@ -114,11 +114,29 @@ tm_shape(europe_background) +
 
 ### europe_nuts1
 
+```{r, fig.cap="europe_nuts1, zonder landsgrenzen"}
+tm_shape(europe_background) +
+  tm_fill(col="gray95") +
+  tm_shape(europe_nuts1) + 
+  tm_polygons(border.col="white", lwd=0.5, col="#00a1cd", border.alpha = 1)
+```
 ```{r, fig.cap="europe_nuts1"}
 tm_shape(europe_background) +
-  tm_fill(col="gray90") +
+  tm_fill(col="gray95") +
   tm_shape(europe_nuts1) + 
-  tm_polygons(border.col="white", lwd=0.5, col="#00a1cd")
+  tm_polygons(border.col="white", lwd=0.5, col="#00a1cd", border.alpha = 0.5) + 
+  tm_shape(europe_nuts0) +
+  tm_borders(col="white", lwd=1, alpha=0.5)
+```
+
+
+```{r, fig.cap="europe_nuts1"}
+tm_shape(europe_background) +
+  tm_fill(col="gray95") +
+  tm_shape(europe_nuts1) + 
+  tm_polygons(border.col="white", lwd=0.5, col="#00a1cd", border.alpha = 0.5) + 
+  tm_shape(europe_nuts0) +
+  tm_borders(col="white", lwd=1, alpha=0.5)
 ```
 
 ### europe_nuts2
