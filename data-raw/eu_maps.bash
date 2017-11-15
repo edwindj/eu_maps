@@ -26,7 +26,7 @@ mapshaper -i CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp \
  -proj "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs" densify \
  -clip bbox=2500000,1400000,7350000,5750000 \
  -simplify 2.5% keep-shapes \
- -o ../data/europe_background.geojson
+ -o ../data/europe_background.geojson\
 
 cd ../data
 # nuts levels are numbered incorrectly so fix that!

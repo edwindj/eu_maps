@@ -18,7 +18,7 @@ tm_shape(europe_background) +
 
 tm_shape(europe_background) + 
   tm_polygons(border.col = "white", col = "gray95") +
-  tm_shape(nuts1) + 
+  tm_shape(nuts1) +
   tm_polygons( col = "NUTS_ID", border.col="white"
              , border.alpha = 1, lwd=0.5, legend.show=FALSE
              )

@@ -15,16 +15,34 @@ library(tmaptools)
 library(sf)
 europe <- st_read("data/europe_background.geojson")
 countries <- st_read("data/europe_nuts0.geojson")
+nuts1 <- st_read("data/europe_nuts1.geojson")
+View(nuts1)
 ```
 # Inleiding
 
 ```{r}
 tm_shape(europe) + 
   tm_fill(col="gray95") + 
-tm_shape(countries) +
+  tm_shape(countries) +
   tm_polygons(border.col="white", lwd=0.5, col="#00a1cd")
 ```
 
+```{r}
+tm_shape(europe) + 
+  tm_fill(col="gray95") + 
+  tm_shape(countries) +
+  tm_polygons(border.col="white", lwd=0.8, col="#00a1cd")
+```
+
+```{r}
+countries$num <- runif(nrow(countries))
+
+tm_shape(europe) + 
+  tm_fill(col="gray95") + 
+  tm_shape(countries) +
+  tm_polygons(col="gray90", border.col="white") + 
+  tm_bubbles("num", col="#0058b8", border.col="white", border.lwd=0.8)
+```
 
 # Vergroten van Malta
 
@@ -42,12 +60,14 @@ scale_region <- function(sf, s=rep(1, nrow(sf))){
   sf
 }
 
-for(sc in c(1, 4, 6,8, 10)){
+par(mfrow=c(3,1))
+for(sc in c(5)){
   s <- ifelse(nuts0$NUTS_ID == "MT", sqrt(sc), 1)
   m <- 
     nuts0 %>% 
     scale_region(s) %>% 
     tm_shape() + tm_fill(col="#00a1cd") + tm_borders(col="white", alpha=0.5) + tm_layout(paste0("Oppervlakte Malta x ", sc)) 
+  cat("\n")
   print(m)
 }
 
@@ -60,7 +80,11 @@ for(sc in c(1, 4, 6,8, 10)){
 Conflicteert dit met landen buiten de populatie? (5% grijs)
 
 
-# Wereldkaart: landen zonder data vs landen buiten de populatie
-
 ```{r}
+countries$p <- rnorm(nrow(countries))
+cbs_purplegreen_9  <- cbshuisstijl:::cbs_purplegreen_9
+cbs_purplegreen_9[5] <- "gray90"
+tm_shape(europe) + 
+  tm_fill("gray95") +
+  tm_shape(countries) + tm_fill("p", palette = cbs_purplegreen_9, n=9, auto.palette.mapping = T, style="equal")
 ```
