@@ -1,5 +1,6 @@
 library(sf)
-for (f in list.files("../data",pattern = "europe_.+.geojson", full.names = TRUE)){
+for (f in list.files("./data",pattern = "europe_.+.geojson", full.names = TRUE)){
+  cat(f, "\n")
   shp <- st_read(f)
   st_crs(shp) <- 3035
   st_write(shp, f, delete_dsn = T)

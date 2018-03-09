@@ -7,6 +7,10 @@
   curl -O http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/CNTR_2014_03M_SH.zip &&
   unzip -o CNTR_2014_03M_SH.zip
 
+[ ! -e ne_10m_admin_0_countries_lakes.zip ] &&
+  curl -O http://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_0_countries_lakes.zip &&
+  unzip -o ne_10m_admin_0_countries_lakes.zip -d ne_admin
+
 rm -r ../data
 mkdir ../data
 

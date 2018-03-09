@@ -1,5 +1,22 @@
 library(sf)
-nuts0 <- st_read("data/europe_nuts0.geojson")
+library(dplyr)
+
+europe <- st_read("data/europe_map.geojson") %>% 
+  st_set_crs(3035)
+
+# fix two country codes...
+country_code <- c( "FRA" = "FR"
+                 , "NOR" = "NO"
+                 )
+
+i <- match(names(country_code), europe$ADM0_A3)
+europe$statcode <- as.character(europe$statcode)
+europe$statcode[i] = unname(country_code)
+
+# remove three letter code
+europe <-
+  europe %>% 
+  select(statcode, statnaam, statname)
 
 scale_region <- function(sf, s=rep(1, nrow(sf))){
   crs <- st_crs(sf)
@@ -13,12 +30,15 @@ scale_region <- function(sf, s=rep(1, nrow(sf))){
   sf
 }
 
-
 # rescale Malta
-s <- ifelse(nuts0$NUTS_ID == "MT", sqrt(5), 1)
+s <- ifelse(europe$statcode == "MT", sqrt(5), 1)
+europe_MT <- scale_region(europe, s)
+#mapview::mapview(europe_MT)
 
-nuts0_MT <- scale_region(nuts0, s)
-mapview::mapview(nuts0_MT)
+st_write(europe_MT, "data/europe_MT.geojson", delete_dsn = TRUE, layer_options = "COORDINATE_PRECISION=0")
+st_write(europe_MT, "data/europe_MT.shp", delete_dsn = TRUE)
 
-st_write(nuts0_MT, "data/europe_nuts0_MT.geojson", delete_dsn = TRUE)
+europe_MT %>% 
+  st_set_geometry(NULL) %>% 
+  write.csv(file = "data-raw/countries2.csv", row.names =  FALSE, na = "")
 
