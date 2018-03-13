@@ -7,11 +7,16 @@ europe <- st_read("data/europe_map.geojson") %>%
 # fix two country codes...
 country_code <- c( "FRA" = "FR"
                  , "NOR" = "NO"
+                 , "GBR" = "GB" # coded in StatLine with gb instead of uk
                  )
-
 i <- match(names(country_code), europe$ADM0_A3)
 europe$statcode <- as.character(europe$statcode)
 europe$statcode[i] = unname(country_code)
+
+countries <- read.csv("data-raw/countries.csv", stringsAsFactors = FALSE)
+i <- match(country_code, countries$statcode)
+europe$statnaam <- as.character(europe$statnaam)
+europe$statnaam[match(country_code, europe$statcode)] <- countries$statnaam[i]
 
 # remove three letter code
 europe <-
@@ -33,6 +38,7 @@ scale_region <- function(sf, s=rep(1, nrow(sf))){
 # rescale Malta
 s <- ifelse(europe$statcode == "MT", sqrt(5), 1)
 europe_MT <- scale_region(europe, s)
+
 #mapview::mapview(europe_MT)
 
 st_write(europe_MT, "data/europe_MT.geojson", delete_dsn = TRUE, layer_options = "COORDINATE_PRECISION=0")

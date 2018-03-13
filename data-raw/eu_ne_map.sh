@@ -16,6 +16,6 @@ mapshaper -i data-raw/ne_admin/ne_10m_admin_0_countries_lakes.shp \
   -o precision=1 data/europe_map.geojson
 
 Rscript malta.R
-mapshaper-gui data/europe_map.geojson &
+mapshaper-gui data/europe_MT.geojson &
 
 #  -simplify 10% keep-shapes \
