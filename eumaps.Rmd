@@ -1,7 +1,8 @@
-+---
+---
 title: "Wereld-kaarten t.b.v. CBS"
 author: "Edwin de Jonge, Chantal Melser, Martijn Tennekes"
 output:
+  github_document: default
   cbsmarkdown::cbs_word_document: default
   cbsmarkdown::cbs_html_document: default
   html_notebook: default
@@ -11,8 +12,6 @@ output:
 knitr::opts_chunk$set(echo=FALSE, warning=FALSE)
 library(tmap)
 library(tmaptools)
-data("Europe")
-proj <- get_projection(Europe)
 ```
 
 # Bron-materiaal

@@ -1,8 +1,8 @@
 [ ! -e data-raw/ne_10m_admin_0_countries_lakes.zip ] &&
-  curl -O http://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_0_countries_lakes.zip &&
+  curl -o data-raw/ne_10m_admin_0_countries_lakes.zip http://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_0_countries_lakes.zip &&
   unzip -o data-raw/ne_10m_admin_0_countries_lakes.zip -d data-raw/ne_admin
 
-rm -rf ../data
+rm -rf ./data
 mkdir -p ./data
 
 mapshaper -i data-raw/ne_admin/ne_10m_admin_0_countries_lakes.shp \
